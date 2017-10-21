@@ -4,8 +4,8 @@
 #####################################################
 
 # definitions
-S = ./src
-D = ./dat
+S = ./Src
+D = ./Dat
 
 # keep intermediate files
 .SECONDARY: 
@@ -13,7 +13,7 @@ D = ./dat
 
 # run code
 run:
-	$S/scrape_pitchfx.py 03-01-2008 11-01-2008 $D/pitchfx2008.db 0
+	$S/scrape_pitchfx.py 03-31-2008 04-01-2008 $D/pitchfx2008.db 0
 
 
 

@@ -297,13 +297,16 @@ def pitchfx_add(hdb, date1, date2, prompt):
                         continue
                     gdict = log.attrib
                     game_type = gdict['type']
+                    # determine what sort of game it is
                     if game_type not in gtypes:
                         continue
                     try:
                         game_id = int(gdict['game_pk'])
-                        game_id_prev = game_id
+                        #game_id_prev = game_id
                     except:
-                        game_id = game_id_prev+1
+                        continue
+                    #except:
+                    #    game_id = game_id_prev+1
                     # check if game already exists in table
                     comm = "SELECT date FROM games WHERE game_id=%s" %(game_id)
                     hdb.execute(comm)

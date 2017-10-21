@@ -31,11 +31,7 @@ if len(sys.argv) < 5:
 bdate = sys.argv[1]
 edate = sys.argv[2]
 dbname = sys.argv[3]
-in5 = int(sys.argv[4])
-if in5 == 0:
-    prompt = False
-else:
-    prompt = True
+prompt = bool(sys.argv[4])
 
 # parse beginning and end dates
 date = re.compile("^(\d\d)-(\d\d)-(\d\d\d\d)$")                                 
@@ -64,12 +60,12 @@ if edate < bdate:
 
 # touch sqlite3 database
 if os.path.isfile(dbname) is False:
-    db = sqlite3.connect(dbname)
-    hdb = db.cursor()
-    pm.pitchfx_init(hdb)
+   db = sqlite3.connect(dbname)
+   hdb = db.cursor()
+   pm.pitchfx_init(hdb)
 else:
-    db = sqlite3.connect(dbname)
-    hdb = db.cursor()
+   db = sqlite3.connect(dbname)
+   hdb = db.cursor()
   
 
 # add information to database
