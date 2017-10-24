@@ -13,7 +13,7 @@ D = ./Dat
 
 # run code
 run:
-	$S/scrape_pitchfx.py 03-31-2008 04-01-2008 $D/pitchfx2008.db 0
+	$S/scrape_pitchfx.py 03-31-2008 10-01-2008 $D/pitchfx2008.db 0
 
 
 

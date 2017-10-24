@@ -153,12 +153,13 @@ def pitchfx_init(hdb):
     hdb.execute(comm)
 
 
-def pitchfx_add(hdb, date1, date2, prompt):
+def pitchfx_add(db, hdb, date1, date2, prompt):
     """Add information to database
 
     Fill Sqlite3 databases with pitchfx data from http://gd2.mlb.com/.
 
     Args:
+        db: sqlite database cursor
         hdb: sqlite3 database handle
         date1: starting date to fill database
         date2: ending date to fill database
@@ -607,6 +608,8 @@ def pitchfx_add(hdb, date1, date2, prompt):
                                         #if event.tag == 'runner':
                                         #    event_id += 1
                     ## temporary break from games
+                    # commit game
+                    db.commit()
                     #return
                 # check whether to break out
                 if date >= date_end:

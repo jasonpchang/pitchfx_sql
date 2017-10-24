@@ -69,7 +69,7 @@ else:
   
 
 # add information to database
-pm.pitchfx_add(hdb, bdate, edate, prompt)
+pm.pitchfx_add(db, hdb, bdate, edate, prompt)
 
 # clean up
 db.commit()
