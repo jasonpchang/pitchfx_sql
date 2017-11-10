@@ -24,7 +24,7 @@ import load_pitchfx_mod as pm
 if len(sys.argv) < 5:
     print "Usage:"
     print "    %s [begin date] [end date] [name of db] [prompt?]" %(sys.argv[0])
-    print " data format: mm-dd-yyyy"
+    print " date format: mm-dd-yyyy"
     sys.exit()
 
 # grab variables
