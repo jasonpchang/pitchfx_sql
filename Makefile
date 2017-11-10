@@ -4,7 +4,7 @@
 #####################################################
 
 # definitions
-S = ./Src
+S = ./src
 D = ./Dat
 
 # keep intermediate files
