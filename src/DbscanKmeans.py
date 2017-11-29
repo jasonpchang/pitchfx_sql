@@ -4,7 +4,7 @@ import pandas as pd
 from sklearn.cluster import DBSCAN, KMeans
 from sklearn.neighbors import NearestNeighbors
 
-class DbscanKmeans():
+class DBSCANKMeans():
     """Class to perform DBSCAN and Kmeans in series"""
     def __init__(self, **params):
         """Initialize variables

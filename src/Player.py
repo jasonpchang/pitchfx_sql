@@ -13,7 +13,7 @@ class Player():
         # parse name
         self.first, self.last = name.split(" ")
 
-    def grab_pitches(self, database, **params):
+    def pitches(self, database, **params):
         """Grab all pitches from database thrown by player
         
         Inputs:
