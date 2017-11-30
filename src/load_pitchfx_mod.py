@@ -38,9 +38,9 @@ def pitchfx_init(hdb):
         "date INTEGER, " \
         "game_time INTEGER, " \
         "home_id INTEGER, " \
-        "visit_id INTEGER, " \
         "home_wins INTEGER, " \
         "home_losses INTEGER, " \
+        "visit_id INTEGER, " \
         "visit_wins INTEGER, " \
         "visit_losses INTEGER, " \
         "stadium_id INTEGER, " \
