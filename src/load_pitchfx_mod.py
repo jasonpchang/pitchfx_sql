@@ -118,7 +118,7 @@ def pitchfx_init(hdb):
         "pitch_num INTEGER, " \
         "at_bat INTEGER, " \
         "time INTEGER, " \
-        "prev_event INTEGER, " \
+        "cur_event INTEGER, " \
         "description TEXT, " \
         "outcome TEXT, " \
         "pre_balls INTEGER, " \
@@ -185,7 +185,7 @@ def pitchfx_add(db, hdb, date1, date2, prompt):
         'id': 1,
         'at_bat': 2,
         'time': 3,
-        'prev_event': 4,
+        'cur_event': 4,
         'des': 5,
         'type': 6,
         'pre_balls': 7,
@@ -433,7 +433,7 @@ def pitchfx_add(db, hdb, date1, date2, prompt):
                     except:
                         continue
                     # intialize events and scores
-                    event_id = -1
+                    event_id = 0
                     action_flag = 0
                     pre_home_score = 0
                     post_home_score = 0
@@ -482,21 +482,21 @@ def pitchfx_add(db, hdb, date1, date2, prompt):
                                     event_description_ab = edict['event']
                                     # if there is a previous action then write current ab info as event
                                     if action_flag == 1:
-                                        event_id += 1
                                         info = (game_id, event_id, action_event, inning_num, is_top, pre_outs, post_outs, pitcher_id, batter_id, runner_id, base_start, base_end, pre_home_score, post_home_score, pre_away_score, post_away_score)
                                         insert = "INSERT OR IGNORE INTO events VALUES (" \
                                             "?, ?, ?, ?, ?, ?, ?, ?, ?, ?, " \
                                             "?, ?, ?, ?, ?, ?" \
                                             ")"
                                         hdb.execute(insert, info)
-                                    if inning_flag == 1:
                                         event_id += 1
-                                        info = (game_id, event_id, -1, inning_num, is_top, pre_outs, post_outs, pitcher_id, batter_id, -1, -1, -1, pre_home_score, post_home_score, pre_away_score, post_away_score)
-                                        insert = "INSERT OR IGNORE INTO events VALUES (" \
-                                             "?, ?, ?, ?, ?, ?, ?, ?, ?, ?, " \
-                                             "?, ?, ?, ?, ?, ?" \
-                                             ")"
-                                        hdb.execute(insert, info)
+                                    #if inning_flag == 1:
+                                    #    event_id += 1
+                                    #    info = (game_id, event_id, -1, inning_num, is_top, pre_outs, post_outs, pitcher_id, batter_id, -1, -1, -1, pre_home_score, post_home_score, pre_away_score, post_away_score)
+                                    #    insert = "INSERT OR IGNORE INTO events VALUES (" \
+                                    #         "?, ?, ?, ?, ?, ?, ?, ?, ?, ?, " \
+                                    #         "?, ?, ?, ?, ?, ?" \
+                                    #         ")"
+                                    #    hdb.execute(insert, info)
                                     try:
                                         pre_home_score = post_home_score
                                         pre_away_score = post_away_score
@@ -516,7 +516,7 @@ def pitchfx_add(db, hdb, date1, date2, prompt):
                                             info = list(pfxinit)
                                             info[pfxkeys['game_id']] = game_id
                                             info[pfxkeys['at_bat']] = ab
-                                            info[pfxkeys['prev_event']] = event_id
+                                            info[pfxkeys['cur_event']] = event_id
                                             idict = event.attrib
                                             try:
                                                 time_stamp = int(idict['sv_id'][-6:])
@@ -557,8 +557,6 @@ def pitchfx_add(db, hdb, date1, date2, prompt):
                                             pre_strikes = post_strikes
                                         # update runner events
                                         elif event.tag == 'runner':
-                                            if runner_flag == 1:
-                                                event_id += 1
                                             rdict = event.attrib
                                             runner_id = rdict['id']
                                             event_description = rdict['event']
@@ -580,12 +578,13 @@ def pitchfx_add(db, hdb, date1, date2, prompt):
                                                 "?, ?, ?, ?, ?, ?" \
                                                 ")"
                                             hdb.execute(insert, info)
+                                            if runner_flag == 1:
+                                                event_id += 1
                                             # upcoming runner tags are not separate events
                                             runner_flag = 0
                                         # handle pitch-outs
                                         elif event.tag == 'po':
                                             runner_flag = 1
-                                            event_id += 1
                                             rdict = event.attrib
                                             event_description = rdict['des']
                                             # fill in event table
@@ -595,11 +594,10 @@ def pitchfx_add(db, hdb, date1, date2, prompt):
                                                 "?, ?, ? ,?, ?, ?" \
                                                 ")"                             
                                             hdb.execute(insert, info)
+                                            event_id += 1
                                     # add end of at-bat information only if an out
                                     if end_of_ab_outs > pre_outs:
                                         # if last entry in ab is not runner then there was nobody on base (new event)
-                                        if event.tag != 'runner':
-                                            event_id += 1
                                         # fill in event table
                                         info = (game_id, event_id, event_description_ab, inning_num, is_top, pre_outs, end_of_ab_outs, pitcher_id, batter_id, batter_id, 'H', '0', pre_home_score, post_home_score, pre_away_score, post_away_score)
                                         insert = "INSERT OR IGNORE INTO events VALUES (" \
@@ -607,6 +605,8 @@ def pitchfx_add(db, hdb, date1, date2, prompt):
                                             "?, ?, ? ,?, ?, ?" \
                                             ")"                             
                                         hdb.execute(insert, info)
+                                        if event.tag != 'runner':
+                                            event_id += 1
                                         # update outs
                                         pre_outs = end_of_ab_outs
                                         post_outs = end_of_ab_outs
