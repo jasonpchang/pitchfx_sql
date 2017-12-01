@@ -117,6 +117,7 @@ def pitchfx_init(hdb):
         "at_bat INTEGER, " \
         "time INTEGER, " \
         "prev_event INTEGER, " \
+        "cur_event INTEGER, " \
         "description TEXT, " \
         "outcome TEXT, " \
         "pre_balls INTEGER, " \
@@ -184,37 +185,38 @@ def pitchfx_add(db, hdb, date1, date2, prompt):
         'at_bat': 2,
         'time': 3,
         'prev_event': 4,
-        'des': 5,
-        'type': 6,
-        'pre_balls': 7,
-        'post_balls': 8,
-        'pre_strikes': 9,
-        'post_strikes': 10,
-        'start_speed': 11,
-        'end_speed': 12,
-        'sz_top': 13,
-        'sz_bot': 14,
-        'pfx_x': 15,
-        'pfx_z': 16,
-        'px': 17,
-        'pz': 18,
-        'x': 19,
-        'y': 20,
-        'x0': 21,
-        'y0': 22,
-        'z0': 23,
-        'vx0': 24,
-        'vy0': 25,
-        'vz0': 26,
-        'ax': 27,
-        'ay': 28,
-        'az': 29,
-        'break_y': 30,
-        'break_angle': 31,
-        'break_length': 32,
-        'spin_dir': 33,
-        'spin_rate': 34,
-        'pitch_type': 35
+        'cur_event': 5,
+        'des': 6,
+        'type': 7,
+        'pre_balls': 8,
+        'post_balls': 9,
+        'pre_strikes': 10,
+        'post_strikes': 11,
+        'start_speed': 12,
+        'end_speed': 13,
+        'sz_top': 14,
+        'sz_bot': 15,
+        'pfx_x': 16,
+        'pfx_z': 17,
+        'px': 18,
+        'pz': 19,
+        'x': 20,
+        'y': 21,
+        'x0': 22,
+        'y0': 23,
+        'z0': 24,
+        'vx0': 25,
+        'vy0': 26,
+        'vz0': 27,
+        'ax': 28,
+        'ay': 29,
+        'az': 30,
+        'break_y': 31,
+        'break_angle': 32,
+        'break_length': 33,
+        'spin_dir': 34,
+        'spin_rate': 35,
+        'pitch_type': 36
         }
 
     # determine which dates already exist in the database
@@ -511,6 +513,7 @@ def pitchfx_add(db, hdb, date1, date2, prompt):
                                             info[pfxkeys['game_id']] = game_id
                                             info[pfxkeys['at_bat']] = ab
                                             info[pfxkeys['prev_event']] = event_id
+                                            info[pfxkeys['cur_event']] = event_id+1
                                             idict = event.attrib
                                             try:
                                                 time_stamp = int(idict['sv_id'][-6:])
@@ -543,7 +546,7 @@ def pitchfx_add(db, hdb, date1, date2, prompt):
                                                 "?, ?, ?, ?, ?, ?, ?, ?, ?, ?, " \
                                                 "?, ?, ?, ?, ?, ?, ?, ?, ?, ?, " \
                                                 "?, ?, ?, ?, ?, ?, ?, ?, ?, ?, " \
-                                                "?, ?, ?, ?, ?, ?" \
+                                                "?, ?, ?, ?, ?, ?, ?" \
                                                 ")"
                                             hdb.execute(insert, info)
                                             # update balls and strikes again
