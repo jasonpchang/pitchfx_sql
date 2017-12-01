@@ -450,6 +450,7 @@ def pitchfx_add(db, hdb, date1, date2, prompt):
                         for inning in header:
                             # new inning flag
                             inning_flag = 1
+                            pre_outs = 0
                             post_outs = 0
                             pre_1b = 0
                             post_1b = 0
@@ -475,7 +476,7 @@ def pitchfx_add(db, hdb, date1, date2, prompt):
                                         action_event = edict['event']
                                         action_flag = 1
                                 elif etype.tag == 'atbat':
-                                    pre_outs = post_outs
+                                    #pre_outs = post_outs
                                     # flag for events with multiple runners
                                     runner_flag = 1
                                     # reset count at beginning of at-bat
@@ -645,15 +646,15 @@ def pitchfx_add(db, hdb, date1, date2, prompt):
                                     if end_of_ab_outs > pre_outs:
                                         # if last entry in ab is not runner then there was nobody on base (new event)
                                         # fill in event table
-                                        info = (game_id, event_id, event_description_ab, inning_num, is_top, pre_outs, post_outs, pitcher_id, batter_id, pre_1b, post_1b, pre_2b, post_2b, pre_3b, post_3b, post_home, pre_home_score, post_home_score, pre_away_score, post_away_score)
+                                        info = (game_id, event_id, event_description_ab, inning_num, is_top, pre_outs, end_of_ab_outs, pitcher_id, batter_id, pre_1b, post_1b, pre_2b, post_2b, pre_3b, post_3b, post_home, pre_home_score, post_home_score, pre_away_score, post_away_score)
                                         #info = (game_id, event_id, event_description_ab, inning_num, is_top, pre_outs, end_of_ab_outs, pitcher_id, batter_id, batter_id, 'H', '0', pre_home_score, post_home_score, pre_away_score, post_away_score)
                                         insert = "INSERT OR IGNORE INTO events VALUES (" \
                                             "?, ?, ?, ?, ?, ?, ?, ?, ?, ?, " \
                                             "?, ?, ?, ?, ?, ?, ?, ?, ?, ?" \
                                             ")"                             
                                         hdb.execute(insert, info)
-                                        if event.tag != 'runner':
-                                            event_id += 1
+                                        #if event.tag != 'runner':
+                                        #    event_id += 1
                                         # update outs
                                         pre_outs = end_of_ab_outs
                                         post_outs = end_of_ab_outs
