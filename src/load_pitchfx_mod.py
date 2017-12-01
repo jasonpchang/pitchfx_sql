@@ -527,6 +527,7 @@ def pitchfx_add(db, hdb, date1, date2, prompt):
                                             pre_2b = post_2b
                                             pre_3b = post_3b
                                             post_home = 0
+                                            event_id += 1
                                         # registered pitch
                                         if event.tag == 'pitch':
                                             runner_flag = 1
@@ -617,16 +618,16 @@ def pitchfx_add(db, hdb, date1, date2, prompt):
                                                    post_3b = 0
                                             # fill in event table
                                             info = (game_id, event_id, event_description, inning_num, is_top, pre_outs, post_outs, pitcher_id, batter_id, pre_1b, post_1b, pre_2b, post_2b, pre_3b, post_3b, post_home, pre_home_score, post_home_score, pre_away_score, post_away_score)
-                                            insert = "INSERT OR IGNORE INTO events VALUES (" \
+                                            insert = "INSERT OR REPLACE INTO events VALUES (" \
                                                    "?, ?, ?, ?, ?, ?, ?, ?, ?, ?, " \
                                                    "?, ?, ?, ?, ?, ?, ?, ?, ?, ?" \
                                                    ")"
                                             hdb.execute(insert, info)
+                                            ## update event id if necessary
                                             #if runner_flag == 1:
                                             #    event_id += 1
                                             # upcoming runner tags are not separate events
                                             runner_flag = 0
-                                            event_id += 1
                                         # handle pitch-outs
                                         elif event.tag == 'po':
                                             runner_flag = 1
