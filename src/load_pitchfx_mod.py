@@ -104,8 +104,10 @@ def pitchfx_init(hdb):
         "runner_id INTEGER, " \
         "run_start TEXT, " \
         "run_end TEXT, " \
-        "home_score INTEGER, " \
-        "away_score INTEGER, " \
+        "pre_home_score INTEGER, " \
+        "post_home_score INTEGER, " \
+        "pre_away_score INTEGER, " \
+        "post_away_score INTEGER, " \
         "UNIQUE(game_id, event_id, runner_id)" \
         ")"
     hdb.execute(comm)
@@ -117,7 +119,6 @@ def pitchfx_init(hdb):
         "at_bat INTEGER, " \
         "time INTEGER, " \
         "prev_event INTEGER, " \
-        "cur_event INTEGER, " \
         "description TEXT, " \
         "outcome TEXT, " \
         "pre_balls INTEGER, " \
@@ -185,38 +186,37 @@ def pitchfx_add(db, hdb, date1, date2, prompt):
         'at_bat': 2,
         'time': 3,
         'prev_event': 4,
-        'cur_event': 5,
-        'des': 6,
-        'type': 7,
-        'pre_balls': 8,
-        'post_balls': 9,
-        'pre_strikes': 10,
-        'post_strikes': 11,
-        'start_speed': 12,
-        'end_speed': 13,
-        'sz_top': 14,
-        'sz_bot': 15,
-        'pfx_x': 16,
-        'pfx_z': 17,
-        'px': 18,
-        'pz': 19,
-        'x': 20,
-        'y': 21,
-        'x0': 22,
-        'y0': 23,
-        'z0': 24,
-        'vx0': 25,
-        'vy0': 26,
-        'vz0': 27,
-        'ax': 28,
-        'ay': 29,
-        'az': 30,
-        'break_y': 31,
-        'break_angle': 32,
-        'break_length': 33,
-        'spin_dir': 34,
-        'spin_rate': 35,
-        'pitch_type': 36
+        'des': 5,
+        'type': 6,
+        'pre_balls': 7,
+        'post_balls': 8,
+        'pre_strikes': 9,
+        'post_strikes': 10,
+        'start_speed': 11,
+        'end_speed': 12,
+        'sz_top': 13,
+        'sz_bot': 14,
+        'pfx_x': 15,
+        'pfx_z': 16,
+        'px': 17,
+        'pz': 18,
+        'x': 19,
+        'y': 20,
+        'x0': 21,
+        'y0': 22,
+        'z0': 23,
+        'vx0': 24,
+        'vy0': 25,
+        'vz0': 26,
+        'ax': 27,
+        'ay': 28,
+        'az': 29,
+        'break_y': 30,
+        'break_angle': 31,
+        'break_length': 32,
+        'spin_dir': 33,
+        'spin_rate': 34,
+        'pitch_type': 35
         }
 
     # determine which dates already exist in the database
@@ -435,8 +435,10 @@ def pitchfx_add(db, hdb, date1, date2, prompt):
                     # intialize events and scores
                     event_id = -1
                     action_flag = 0
-                    home_score = 0
-                    away_score = 0
+                    pre_home_score = 0
+                    post_home_score = 0
+                    pre_away_score = 0
+                    post_away_score = 0
                     # loop over inning
                     for header in log:
                         iinfo = header.attrib
@@ -481,23 +483,25 @@ def pitchfx_add(db, hdb, date1, date2, prompt):
                                     # if there is a previous action then write current ab info as event
                                     if action_flag == 1:
                                         event_id += 1
-                                        info = (game_id, event_id, action_event, inning_num, is_top, pre_outs, post_outs, pitcher_id, batter_id, runner_id, base_start, base_end, home_score, away_score)
+                                        info = (game_id, event_id, action_event, inning_num, is_top, pre_outs, post_outs, pitcher_id, batter_id, runner_id, base_start, base_end, pre_home_score, post_home_score, pre_away_score, post_away_score)
                                         insert = "INSERT OR IGNORE INTO events VALUES (" \
                                             "?, ?, ?, ?, ?, ?, ?, ?, ?, ?, " \
-                                            "?, ?, ?, ?" \
+                                            "?, ?, ?, ?, ?, ?" \
                                             ")"
                                         hdb.execute(insert, info)
                                     if inning_flag == 1:
                                         event_id += 1
-                                        info = (game_id, event_id, -1, inning_num, is_top, pre_outs, post_outs, pitcher_id, batter_id, -1, -1, -1, home_score, away_score)
+                                        info = (game_id, event_id, -1, inning_num, is_top, pre_outs, post_outs, pitcher_id, batter_id, -1, -1, -1, pre_home_score, post_home_score, pre_away_score, post_away_score)
                                         insert = "INSERT OR IGNORE INTO events VALUES (" \
                                              "?, ?, ?, ?, ?, ?, ?, ?, ?, ?, " \
-                                             "?, ?, ?, ?" \
+                                             "?, ?, ?, ?, ?, ?" \
                                              ")"
                                         hdb.execute(insert, info)
                                     try:
-                                        home_score = edict['home_team_runs']
-                                        away_score = edict['away_team_runs']
+                                        pre_home_score = post_home_score
+                                        pre_away_score = post_away_score
+                                        post_home_score = edict['home_team_runs']
+                                        post_away_score = edict['away_team_runs']
                                     except:
                                         pass
                                     # reset inning and action flag
@@ -513,7 +517,6 @@ def pitchfx_add(db, hdb, date1, date2, prompt):
                                             info[pfxkeys['game_id']] = game_id
                                             info[pfxkeys['at_bat']] = ab
                                             info[pfxkeys['prev_event']] = event_id
-                                            info[pfxkeys['cur_event']] = event_id+1
                                             idict = event.attrib
                                             try:
                                                 time_stamp = int(idict['sv_id'][-6:])
@@ -546,7 +549,7 @@ def pitchfx_add(db, hdb, date1, date2, prompt):
                                                 "?, ?, ?, ?, ?, ?, ?, ?, ?, ?, " \
                                                 "?, ?, ?, ?, ?, ?, ?, ?, ?, ?, " \
                                                 "?, ?, ?, ?, ?, ?, ?, ?, ?, ?, " \
-                                                "?, ?, ?, ?, ?, ?, ?" \
+                                                "?, ?, ?, ?, ?, ?" \
                                                 ")"
                                             hdb.execute(insert, info)
                                             # update balls and strikes again
@@ -571,10 +574,10 @@ def pitchfx_add(db, hdb, date1, date2, prompt):
                                                     base_end = "0"
                                                     post_outs = pre_outs+1
                                             # fill in event table
-                                            info = (game_id, event_id, event_description, inning_num, is_top, pre_outs, post_outs, pitcher_id, batter_id, runner_id, base_start, base_end, home_score, away_score)
+                                            info = (game_id, event_id, event_description, inning_num, is_top, pre_outs, post_outs, pitcher_id, batter_id, runner_id, base_start, base_end, pre_home_score, post_home_score, pre_away_score, post_away_score)
                                             insert = "INSERT OR IGNORE INTO events VALUES (" \
                                                 "?, ?, ?, ?, ?, ?, ?, ?, ?, ?, " \
-                                                "?, ?, ?, ?" \
+                                                "?, ?, ?, ?, ?, ?" \
                                                 ")"
                                             hdb.execute(insert, info)
                                             # upcoming runner tags are not separate events
@@ -586,10 +589,10 @@ def pitchfx_add(db, hdb, date1, date2, prompt):
                                             rdict = event.attrib
                                             event_description = rdict['des']
                                             # fill in event table
-                                            info = (game_id, event_id, event_description, inning_num, is_top, pre_outs, post_outs, pitcher_id, batter_id, runner_id, base_start, base_start, home_score, away_score)
+                                            info = (game_id, event_id, event_description, inning_num, is_top, pre_outs, post_outs, pitcher_id, batter_id, runner_id, base_start, base_start, pre_home_score, post_home_score, pre_away_score, post_away_score)
                                             insert = "INSERT OR IGNORE INTO events VALUES (" \
                                                 "?, ?, ?, ?, ?, ?, ?, ?, ?, ?, " \
-                                                "?, ?, ? ,?" \
+                                                "?, ?, ? ,?, ?, ?" \
                                                 ")"                             
                                             hdb.execute(insert, info)
                                     # add end of at-bat information only if an out
@@ -598,10 +601,10 @@ def pitchfx_add(db, hdb, date1, date2, prompt):
                                         if event.tag != 'runner':
                                             event_id += 1
                                         # fill in event table
-                                        info = (game_id, event_id, event_description_ab, inning_num, is_top, pre_outs, end_of_ab_outs, pitcher_id, batter_id, batter_id, 'H', '0', home_score, away_score)
+                                        info = (game_id, event_id, event_description_ab, inning_num, is_top, pre_outs, end_of_ab_outs, pitcher_id, batter_id, batter_id, 'H', '0', pre_home_score, post_home_score, pre_away_score, post_away_score)
                                         insert = "INSERT OR IGNORE INTO events VALUES (" \
                                             "?, ?, ?, ?, ?, ?, ?, ?, ?, ?, " \
-                                            "?, ?, ? ,?" \
+                                            "?, ?, ? ,?, ?, ?" \
                                             ")"                             
                                         hdb.execute(insert, info)
                                         # update outs
