@@ -50,7 +50,7 @@ class Player():
         query = """SELECT DISTINCT pitchfx.* 
                 FROM pitchfx
                 JOIN events ON (pitchfx.game_id=events.game_id
-                    AND pitchfx.prev_event=events.event_id)
+                    AND pitchfx.cur_event=events.event_id)
                 WHERE events.pitcher_id=(SELECT player_id
                 FROM players
                 WHERE players.player_first='%s'
