@@ -4,24 +4,31 @@ import sqlite3
 
 class Player():
     """Player class for extracting information from pitchfx database"""
-    def __init__(self, name):
+    def __init__(self, name, database):
         """Initialize player object
         
         Inputs:
             name: name of player in "first last" format
+            database: database to read from
         """
         # parse name
         self.first, self.last = name.split(" ")
+        self.database = database
         
-    def pitch_games(self, database):
-        """Grab all games from database player pitched in
+    def info(self):
+        """Grab player information"""
+        # grab player info
+        query = """SELECT *
+                   FROM players
+                   WHERE player_first='%s'
+                       AND player_last='%s'""" %(self.first, self.last)
+        self.player_info = pd.read_sql_query(query, database)
         
-        Inputs:
-            database: sqlite object of database to read from
+        # clean up
+        return self.player_info
         
-        Outpus:
-            games: pandas dataframe containing games player played in
-        """
+    def pitch_games(self):
+        """Grab all games from database player pitched in"""
         # grab all games
         query = """SELECT DISTINCT games.*
                 FROM games
@@ -31,16 +38,15 @@ class Player():
                 WHERE players.player_first='%s'
                     AND players.player_last='%s')
                 ORDER BY games.game_id""" %(self.first, self.last)
-        self.player_pgames = pd.read_sql_query(query, database)
+        self.player_pgames = pd.read_sql_query(query, self.database)
         
         # clean up
         return self.player_pgames
 
-    def pitches(self, database, **params):
+    def pitches(self, **params):
         """Grab all pitches from database thrown by player
         
         Inputs:
-            database: sqlite object of database to read from
             clean [False]: remove Nans, pitch-outs, intentional balls
         
         Outputs:
@@ -56,7 +62,7 @@ class Player():
                 WHERE players.player_first='%s'
                     AND players.player_last='%s')
                 ORDER BY game_id, pitch_num""" %(self.first, self.last)
-        self.player_pfx = pd.read_sql_query(query, database)
+        self.player_pfx = pd.read_sql_query(query, self.database)
         
         # clean or not
         if params:
@@ -69,15 +75,8 @@ class Player():
         # clean up
         return self.player_pfx
     
-    def pitch_events(self, database):
-        """Grab events where player is the pitcher
-        
-        Inputs:
-            database: sqlite object of database to read from
-            
-        Output:
-            events: events where player is the pitcher
-        """
+    def pitch_events(self):
+        """Grab events where player is the pitcher"""
         # grab all events
         query = """SELECT DISTINCT * 
                 FROM events
@@ -86,7 +85,7 @@ class Player():
                 WHERE players.player_first='Barry'
                     AND players.player_last='Zito')
                 ORDER BY game_id, event_id"""
-        self.player_pevents = pd.read_sql_query(query, database)
+        self.player_pevents = pd.read_sql_query(query, self.database)
         
         # clean up
         return self.player_pevents
