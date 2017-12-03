@@ -22,7 +22,7 @@ class Player():
                    FROM players
                    WHERE player_first='%s'
                        AND player_last='%s'""" %(self.first, self.last)
-        self.player_info = pd.read_sql_query(query, database)
+        self.player_info = pd.read_sql_query(query, self.database)
         
         # clean up
         return self.player_info
