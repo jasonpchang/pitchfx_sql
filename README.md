@@ -1,5 +1,6 @@
 # pitchfx_sql
 sql database for pitchfx data
+
 *NOTE 2018.01.21*: data no longer available at http://gd2.mlb.com/components/game/mlb/
 
 ### Getting started
