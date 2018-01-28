@@ -1,5 +1,5 @@
 # pitchfx_sql
-sql database for pitchfx data
+Solve baseball-related problems with your own PitchFX database using Python and SQL
 
 *NOTE 2018.01.21*: data no longer available at http://gd2.mlb.com/components/game/mlb/  
 
@@ -14,7 +14,7 @@ Building your personal PitchFX dataset requires scraping the data off the web. I
 
 
 ## Projects
-This repository contains a collection of notebooks that serve dual purposes. First, they provide examples of how to interact with the database to extract the information you want. Second, they provide examples of questions that can be addressed using this rich database.
+This repository contains a collection of notebooks that serve dual purposes. First, they provide examples of how to interact with the database to extract the information you want. Second, they provide examples of problems that can be addressed using this rich database.
 
 ### Pitch classification
 Pitchers are characterized by the pitches they throw. Some throw many types of pitches, while some throw few types. Some throw hard, some throw soft. Containing a wealth of pitch trajectory information, the PitchFX database is ideal for classifying what sort of pitches pitchers have at their disposal.
