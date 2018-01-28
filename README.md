@@ -8,9 +8,9 @@ Building your personal PitchFX dataset requires scraping the data off the web. I
 
 *python ./src/scrape_pitchfx.py 03-01-2008 05-01-2008 example.db 1*
 
-* For more detailed explanation on how to download your own SQL database and query it, please read [read_data.ipynb](https://github.com/jasonpchang/pitchfx_sql/blob/master/notebooks/getting_started/read_data.ipynb).
+* For more detailed explanation on how to download your own SQL database and query it, please read [read_data.ipynb](https://github.com/jasonpchang/pitchfx_sql/blob/master/notebooks/getting_started/read_data.ipynb)
 
-* For a look at some of the pitch data available, have a look at exploratory data analysis in [eda.ipynb](https://github.com/jasonpchang/pitchfx_sql/blob/master/notebooks/getting_started/eda.ipynb).  
+* For a look at some of the pitch data available, have a look at exploratory data analysis in [eda.ipynb](https://github.com/jasonpchang/pitchfx_sql/blob/master/notebooks/getting_started/eda.ipynb)  
 
 
 ## Projects
@@ -21,9 +21,9 @@ Pitchers are characterized by the pitches they throw. Some throw many types of p
 
 Here, I take an unsupervised learning approach to identify different pitch types thrown by different pitchers. I investigate the effectiveness of hierarchical, K-means, and DBSCAN (standard and multi-density) clustering approaches to grouping pitches. Because the number of types of pitches thrown varies from pitcher to pitcher, I suggest a DBSCAN with K-means clustering approach to automatic pitch clustering.
 
-* Details of the pitch clustering process are outlined in [pitch_classification.ipynb](https://github.com/jasonpchang/pitchfx_sql/blob/master/notebooks/pitch_classification/pitch_classification.ipynb).
+* Details of the pitch clustering process are outlined in [pitch_classification.ipynb](https://github.com/jasonpchang/pitchfx_sql/blob/master/notebooks/pitch_classification/pitch_classification.ipynb)
 
-* Details of multi-density DBSCAN approach are outlined in [multidensity_dbscan.ipynb](https://github.com/jasonpchang/pitchfx_sql/blob/master/notebooks/pitch_classification/multidensity_dbscan.ipynb).  
+* Details of multi-density DBSCAN approach are outlined in [multidensity_dbscan.ipynb](https://github.com/jasonpchang/pitchfx_sql/blob/master/notebooks/pitch_classification/multidensity_dbscan.ipynb)  
 
 
 ### Swing prediction
